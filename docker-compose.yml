@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./API/DjangoAPI/DjangoAPI
+      dockerfile: Dockerfile
+    container_name: django-api
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./API/DjangoAPI/DjangoAPI:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
+  frontend:
+    build:
+      context: ./UI
+      dockerfile: Dockerfile
+    container_name: vue-ui
+    volumes:
+      - ./UI:/app
+    ports:
+      - "8080:8080"
+    command: npm run serve
+
+  db:
+    image: postgres:13
+    container_name: postgres-db
+    environment:
+      POSTGRES_DB: homecareapi
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+volumes:
+  postgres_data:

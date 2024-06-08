@@ -1,0 +1,25 @@
+# UI/Dockerfile
+# Use the official Node.js image as the base image
+FROM node:14-alpine
+
+# Set the working directory
+WORKDIR /app
+
+# Install dependencies
+COPY package*.json ./
+RUN npm install
+
+# Copy the Vue.js project
+COPY . /app/
+
+# Build the Vue.js app
+RUN npm run build
+
+# Install a simple server to serve the built app
+RUN npm install -g serve
+
+# Expose the port that the app runs on
+EXPOSE 5000
+
+# Run the server to serve the built app
+CMD ["serve", "-s", "dist", "-l", "5000"]
